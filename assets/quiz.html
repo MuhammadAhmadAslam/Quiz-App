@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
     <link rel="stylesheet" href="quiz.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
 <body>
   
-  
-  <div id="quizDiv">
-    
+  <h1 id="heading">HTML Quiz App</h1>
+  <div id="quizDiv" class="hello">
+    <p class="countdown" id="countdown"></p>
     <h1 id="questionHeading"></h1>
     <form id="quizForm">
         <input type="radio" id="r1" name="quiz"><label id="l1" for="r1"></label><br>
@@ -18,9 +19,13 @@
         <input type="radio" id="r3" name="quiz"><label id="l3" for="r3"></label><br>
         <input type="radio" id="r4" name="quiz"><label id="l4" for="r4"></label><br>
     </form>
-    <button id="nextBtn">Next</button>
+    <div class="btndiv">
+    <button id="nextBtn" class="nextBtn disabled">Next</button>
 </div>
-    
+</div>
+    <img src="" alt="">
+
+
 
 
     <script src="quiz.js"></script>

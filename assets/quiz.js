@@ -151,78 +151,110 @@ const htmlMCQs = [
   }
 ];
 
- let currentQuestionIndex = 0;
- let radioButtons = document.getElementsByName('quiz');
+let currentQuestionIndex = 0;
+let radioButtons = document.getElementsByName('quiz');
 
- let shuffled = htmlMCQs
-     .map(value => ({ value, sort: Math.random() }))
-     .sort((a, b) => a.sort - b.sort)
-     .map(({ value }) => value)
+let shuffled = htmlMCQs
+  .map(value => ({ value, sort: Math.random() }))
+  .sort((a, b) => a.sort - b.sort)
+  .map(({ value }) => value)
+var index = 1
+function loadQuestion() {
+  if (currentQuestionIndex < shuffled.length) {
+    let question = shuffled[currentQuestionIndex];
+    document.getElementById('questionHeading').innerText = `${index}) ${question.question}`;
+    document.getElementById('l1').innerText = `${question.options[0]}`;
+    document.getElementById('l2').innerText = question.options[1];
+    document.getElementById('l3').innerText = question.options[2];
+    document.getElementById('l4').innerText = question.options[3];
 
- function loadQuestion() {
-if(currentQuestionIndex < shuffled.length) {
-   let question = shuffled[currentQuestionIndex];
-  document.getElementById('questionHeading').innerText = question.question;
-  document.getElementById('l1').innerText = question.options[0];
-document.getElementById('l2').innerText = question.options[1];
-document.getElementById('l3').innerText = question.options[2];
-document.getElementById('l4').innerText = question.options[3];
 
-                // Set radio button values
-for (let i = 0; i < radioButtons.length; i++) {
-                
-radioButtons[i].value = question.options[i];
-  radioButtons[i].checked = false; // Uncheck all radio buttons
-      }
+    for (let i = 0; i < radioButtons.length; i++) {
+
+      radioButtons[i].value = question.options[i];
+      radioButtons[i].checked = false;
+    }
 
 
   } else {
-       alert("Quiz finished!");
-       document.getElementById('quizDiv').innerHTML = ''
-       alert(score)
-     // Disable the next button when quiz is over
-            }
-        }
+    printAfter()
+  }
+}
 var nextBtn = document.getElementById('nextBtn')
 
 
 var score = 0;
 function validateRadios() {
-   var checkedButton = null;
-for (var i = 0; i < radioButtons.length; i++) {
-  if (radioButtons[i].checked) {
-  checkedButton = radioButtons[i].value;
-nextBtn = nextBtn.disabled = false
-question =shuffled[currentQuestionIndex];
-  if (checkedButton == question.answer) {
-    console.log(true)
-    score++
-    currentQuestionIndex++
-    console.log(score)
-  }else{
-    console.log(false);
-    currentQuestionIndex++
-    console.log('This is else checked button',checkedButton);
-    console.log('this is else question.answer',question.answer)
-  }
-    break
+  var checkedButton = null;
+  for (var i = 0; i < radioButtons.length; i++) {
+    if (radioButtons[i].checked) {
+      checkedButton = radioButtons[i].value;
+      nextBtn = nextBtn.disabled = false
+      index++
+      question = shuffled[currentQuestionIndex];
+      if (checkedButton == question.answer) {
+        console.log(true)
+        score++
+        localStorage.setItem('Score' , score)
+        currentQuestionIndex++
+        console.log(score)
+      } else {
+        console.log(false);
+        currentQuestionIndex++
+        console.log('This is else checked button', checkedButton);
+        console.log('this is else question.answer', question.answer)
+      }
+      break
     }
   }
 }
 
-document.getElementById('nextBtn').addEventListener('click', function() {
-            validateRadios();
-            loadQuestion();
-        });
+document.getElementById('nextBtn').addEventListener('click', function () {
+  validateRadios();
+  loadQuestion();
+});
 
-        // Load the first question when the page loads
-        window.onload = loadQuestion;
+window.onload = loadQuestion;
 
 
-        document.addEventListener('keydown', function(event) {
-          if (event.keyCode === 116) {
-            event.preventDefault();
-            // You can also display a message or alert the user here
-          }
-        });
-        window.backward.length = 0;
+document.addEventListener('keydown', function (event) {
+  if (event.keyCode === 116) {
+    event.preventDefault();
+  }
+});
+
+let timeRemaining = 60 * 60; // 60 minutes in seconds
+let countdownInterval = setInterval(() => {
+  let minutes = Math.floor(timeRemaining / 60);
+  let seconds = timeRemaining % 60;
+  document.getElementById("countdown").innerText = `${minutes} : ${seconds}`;
+  timeRemaining--;
+  if (timeRemaining <= 0) {
+    clearInterval(countdownInterval);
+    printAfter()
+  }
+}, 1000); // 1 second in milliseconds
+
+
+function printAfter() {
+  if (score > 17) {
+    
+  var quizDiv =  document.getElementById("quizDiv")
+  quizDiv.innerHTML = 
+    `<div class='QuizBox'>
+    <h1>Your Result</h1>
+    <h6>Quiz Finished! Your Score : ${(score/htmlMCQs.length)*100}</h6>
+    <h6>Wrong Answers : ${htmlMCQs.length-score}</h6>
+    <img src='Images/passed.png' alt='img' id='img'>
+    </div>`;
+  }else{
+    document.getElementById("quizDiv").innerHTML = 
+    `<div class='QuizBox'>
+    <h1 class='h'>Your Result</h1>
+    <h6 class='h1'>Quiz Finished! Your Score : ${(score/htmlMCQs.length)*100}</h6>
+    <h6 class='h1'>Wrong Answers : ${htmlMCQs.length-score}</h6>
+    <img src='Images/fail.png' alt='img' id='img'>
+    </div>`
+    quizDiv.setAttribute('class' , 'QuizBox')
+  }
+}
