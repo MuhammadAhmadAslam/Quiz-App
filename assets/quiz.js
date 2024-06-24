@@ -225,3 +225,4 @@ document.getElementById('nextBtn').addEventListener('click', function() {
             // You can also display a message or alert the user here
           }
         });
+        window.backward.length = 0;
